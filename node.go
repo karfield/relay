@@ -1,11 +1,11 @@
 package relay
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/graphql-go/graphql"
-	"golang.org/x/net/context"
+	"github.com/karfield/graphql"
 	"strings"
 )
 
@@ -54,7 +54,7 @@ func NewNodeDefinitions(config NodeDefinitionsConfig) *NodeDefinitions {
 				Description: "The ID of an object",
 			},
 		},
-		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 			if config.IDFetcher == nil {
 				return nil, nil
 			}
@@ -63,7 +63,7 @@ func NewNodeDefinitions(config NodeDefinitionsConfig) *NodeDefinitions {
 				id = fmt.Sprintf("%v", iid)
 			}
 			return config.IDFetcher(id, p.Info, p.Context)
-		},
+		}),
 	}
 	return &NodeDefinitions{
 		NodeInterface: nodeInterface,
@@ -117,7 +117,7 @@ func GlobalIDField(typeName string, idFetcher GlobalIDFetcherFn) *graphql.Field 
 		Name:        "id",
 		Description: "The ID of an object",
 		Type:        graphql.NewNonNull(graphql.ID),
-		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 			id := ""
 			if idFetcher != nil {
 				fetched, err := idFetcher(p.Source, p.Info, p.Context)
@@ -139,6 +139,6 @@ func GlobalIDField(typeName string, idFetcher GlobalIDFetcherFn) *graphql.Field 
 			}
 			globalID := ToGlobalID(typeName, id)
 			return globalID, nil
-		},
+		}),
 	}
 }

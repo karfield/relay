@@ -6,10 +6,10 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/testutil"
-	"github.com/graphql-go/relay"
-	"golang.org/x/net/context"
+	"context"
+	"github.com/karfield/graphql"
+	"github.com/karfield/graphql/testutil"
+	"github.com/karfield/relay"
 )
 
 type photo2 struct {
@@ -64,14 +64,14 @@ var globalIDTestQueryType = graphql.NewObject(graphql.ObjectConfig{
 		"node": globalIDTestDef.NodeField,
 		"allObjects": &graphql.Field{
 			Type: graphql.NewList(globalIDTestDef.NodeInterface),
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+			Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 				return []interface{}{
 					globalIDTestUserData["1"],
 					globalIDTestUserData["2"],
 					globalIDTestPhotoData["1"],
 					globalIDTestPhotoData["2"],
 				}, nil
-			},
+			}),
 		},
 	},
 })
@@ -88,7 +88,7 @@ func init() {
 				Type: graphql.String,
 			},
 		},
-		Interfaces: []*graphql.Interface{globalIDTestDef.NodeInterface},
+		Interfaces: graphql.Interfaces{globalIDTestDef.NodeInterface},
 	})
 	photoIDFetcher := func(obj interface{}, info graphql.ResolveInfo, ctx context.Context) (string, error) {
 		switch obj := obj.(type) {
@@ -105,7 +105,7 @@ func init() {
 				Type: graphql.Int,
 			},
 		},
-		Interfaces: []*graphql.Interface{globalIDTestDef.NodeInterface},
+		Interfaces: graphql.Interfaces{globalIDTestDef.NodeInterface},
 	})
 
 	globalIDTestSchema, _ = graphql.NewSchema(graphql.SchemaConfig{
@@ -138,7 +138,7 @@ func TestGlobalIDFields_GivesDifferentIDs(t *testing.T) {
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        globalIDTestSchema,
 		RequestString: query,
 	})
@@ -174,7 +174,7 @@ func TestGlobalIDFields_RefetchesTheIDs(t *testing.T) {
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        globalIDTestSchema,
 		RequestString: query,
 	})

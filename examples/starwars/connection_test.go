@@ -1,9 +1,9 @@
 package starwars_test
 
 import (
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/testutil"
-	"github.com/graphql-go/relay/examples/starwars"
+	"github.com/karfield/graphql"
+	"github.com/karfield/graphql/testutil"
+	"github.com/karfield/relay/examples/starwars"
 	"reflect"
 	"testing"
 )
@@ -39,7 +39,7 @@ func TestConnection_TestFetching_CorrectlyFetchesTheFirstShipOfTheRebels(t *test
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        starwars.Schema,
 		RequestString: query,
 	})
@@ -86,7 +86,7 @@ func TestConnection_TestFetching_CorrectlyFetchesTheFirstTwoShipsOfTheRebelsWith
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        starwars.Schema,
 		RequestString: query,
 	})
@@ -139,7 +139,7 @@ func TestConnection_TestFetching_CorrectlyFetchesTheNextThreeShipsOfTheRebelsWit
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        starwars.Schema,
 		RequestString: query,
 	})
@@ -173,7 +173,7 @@ func TestConnection_TestFetching_CorrectlyFetchesNoShipsOfTheRebelsAtTheEndOfThe
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        starwars.Schema,
 		RequestString: query,
 	})
@@ -255,7 +255,7 @@ func TestConnection_TestFetching_CorrectlyIdentifiesTheEndOfTheList(t *testing.T
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        starwars.Schema,
 		RequestString: query,
 	})

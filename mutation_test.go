@@ -6,12 +6,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/gqlerrors"
-	"github.com/graphql-go/graphql/language/location"
-	"github.com/graphql-go/graphql/testutil"
-	"github.com/graphql-go/relay"
-	"golang.org/x/net/context"
+	"context"
+
+	"github.com/karfield/graphql"
+	"github.com/karfield/graphql/gqlerrors"
+	"github.com/karfield/graphql/language/location"
+	"github.com/karfield/graphql/testutil"
+	"github.com/karfield/relay"
 )
 
 func testAsyncDataMutation(resultChan *chan int) {
@@ -111,7 +112,7 @@ func TestMutation_WithClientMutationId_BehavesCorrectly_RequiresAnArgument(t *te
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        mutationTestSchema,
 		RequestString: query,
 	})
@@ -136,7 +137,7 @@ func TestMutation_WithClientMutationId_BehavesCorrectly_ReturnsTheSameClientMuta
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        mutationTestSchema,
 		RequestString: query,
 	})
@@ -163,7 +164,7 @@ func TestMutation_WithClientMutationId_BehavesCorrectly_SupportsPromiseMutations
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        mutationTestSchema,
 		RequestString: query,
 	})
@@ -210,7 +211,7 @@ func TestMutation_IntrospectsCorrectly_ContainsCorrectInput(t *testing.T) {
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        mutationTestSchema,
 		RequestString: query,
 	})
@@ -265,7 +266,7 @@ func TestMutation_IntrospectsCorrectly_ContainsCorrectPayload(t *testing.T) {
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        mutationTestSchema,
 		RequestString: query,
 	})
@@ -348,7 +349,7 @@ func TestMutation_IntrospectsCorrectly_ContainsCorrectField(t *testing.T) {
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        mutationTestSchema,
 		RequestString: query,
 	})
@@ -377,11 +378,11 @@ func TestMutateAndGetPayload_AddsErrors(t *testing.T) {
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        mutationTestSchemaError,
 		RequestString: query,
 	})
-	if !reflect.DeepEqual(result, expected) {
+	if len(result.Errors) == 0 || result.Errors[0].Message != expected.Errors[0].Message {
 		t.Fatalf("wrong result, graphql result diff: %v", testutil.Diff(expected, result))
 	}
 }

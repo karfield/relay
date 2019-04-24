@@ -1,7 +1,7 @@
 package relay
 
 import (
-	"github.com/graphql-go/graphql"
+	"github.com/karfield/graphql"
 )
 
 type ResolveSingleInputFn func(input interface{}) interface{}
@@ -25,7 +25,7 @@ func PluralIdentifyingRootField(config PluralIdentifyingRootFieldConfig) *graphq
 		Description: config.Description,
 		Type:        graphql.NewList(config.OutputType),
 		Args:        inputArgs,
-		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 			inputs, ok := p.Args[config.ArgName]
 			if !ok {
 				return nil, nil
@@ -44,6 +44,6 @@ func PluralIdentifyingRootField(config PluralIdentifyingRootFieldConfig) *graphq
 				return res, nil
 			}
 			return nil, nil
-		},
+		}),
 	}
 }

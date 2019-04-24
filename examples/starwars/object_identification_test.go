@@ -1,9 +1,9 @@
 package starwars_test
 
 import (
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/testutil"
-	"github.com/graphql-go/relay/examples/starwars"
+	"github.com/karfield/graphql"
+	"github.com/karfield/graphql/testutil"
+	"github.com/karfield/relay/examples/starwars"
 	"reflect"
 	"testing"
 )
@@ -25,7 +25,7 @@ func TestObjectIdentification_TestFetching_CorrectlyFetchesTheIDAndTheNameOfTheR
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        starwars.Schema,
 		RequestString: query,
 	})
@@ -52,7 +52,7 @@ func TestObjectIdentification_TestFetching_CorrectlyRefetchesTheRebels(t *testin
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        starwars.Schema,
 		RequestString: query,
 	})
@@ -77,7 +77,7 @@ func TestObjectIdentification_TestFetching_CorrectlyFetchesTheIDAndTheNameOfTheE
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        starwars.Schema,
 		RequestString: query,
 	})
@@ -104,7 +104,7 @@ func TestObjectIdentification_TestFetching_CorrectlyRefetchesTheEmpire(t *testin
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        starwars.Schema,
 		RequestString: query,
 	})
@@ -131,7 +131,7 @@ func TestObjectIdentification_TestFetching_CorrectlyRefetchesTheXWing(t *testing
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        starwars.Schema,
 		RequestString: query,
 	})

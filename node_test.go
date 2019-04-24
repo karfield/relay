@@ -6,12 +6,12 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/gqlerrors"
-	"github.com/graphql-go/graphql/language/location"
-	"github.com/graphql-go/graphql/testutil"
-	"github.com/graphql-go/relay"
-	"golang.org/x/net/context"
+	"context"
+	"github.com/karfield/graphql"
+	"github.com/karfield/graphql/gqlerrors"
+	"github.com/karfield/graphql/language/location"
+	"github.com/karfield/graphql/testutil"
+	"github.com/karfield/relay"
 )
 
 type user struct {
@@ -79,7 +79,7 @@ func init() {
 				Type: graphql.String,
 			},
 		},
-		Interfaces: []*graphql.Interface{nodeTestDef.NodeInterface},
+		Interfaces: graphql.Interfaces{nodeTestDef.NodeInterface},
 	})
 	nodeTestPhotoType = graphql.NewObject(graphql.ObjectConfig{
 		Name: "Photo",
@@ -91,7 +91,7 @@ func init() {
 				Type: graphql.Int,
 			},
 		},
-		Interfaces: []*graphql.Interface{nodeTestDef.NodeInterface},
+		Interfaces: graphql.Interfaces{nodeTestDef.NodeInterface},
 	})
 
 	nodeTestSchema, _ = graphql.NewSchema(graphql.SchemaConfig{
@@ -112,7 +112,7 @@ func TestNodeInterfaceAndFields_AllowsRefetching_GetsTheCorrectIDForUsers(t *tes
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        nodeTestSchema,
 		RequestString: query,
 	})
@@ -133,7 +133,7 @@ func TestNodeInterfaceAndFields_AllowsRefetching_GetsTheCorrectIDForPhotos(t *te
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        nodeTestSchema,
 		RequestString: query,
 	})
@@ -158,7 +158,7 @@ func TestNodeInterfaceAndFields_AllowsRefetching_GetsTheCorrectNameForUsers(t *t
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        nodeTestSchema,
 		RequestString: query,
 	})
@@ -183,7 +183,7 @@ func TestNodeInterfaceAndFields_AllowsRefetching_GetsTheCorrectWidthForPhotos(t 
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        nodeTestSchema,
 		RequestString: query,
 	})
@@ -206,7 +206,7 @@ func TestNodeInterfaceAndFields_AllowsRefetching_GetsTheCorrectTypeNameForUsers(
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        nodeTestSchema,
 		RequestString: query,
 	})
@@ -229,7 +229,7 @@ func TestNodeInterfaceAndFields_AllowsRefetching_GetsTheCorrectTypeNameForPhotos
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        nodeTestSchema,
 		RequestString: query,
 	})
@@ -253,7 +253,7 @@ func TestNodeInterfaceAndFields_AllowsRefetching_IgnoresPhotoFragmentsOnUser(t *
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        nodeTestSchema,
 		RequestString: query,
 	})
@@ -278,12 +278,12 @@ func TestNodeInterfaceAndFields_AllowsRefetching_ReturnsNullForBadIDs(t *testing
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        nodeTestSchema,
 		RequestString: query,
 	})
 
-	if !reflect.DeepEqual(result, expected) {
+	if len(result.Errors) == 0 || result.Errors[0].Message != expected.Errors[0].Message{
 		t.Fatalf("wrong result, graphql result diff: %v", testutil.Diff(expected, result))
 	}
 }
@@ -324,7 +324,7 @@ func TestNodeInterfaceAndFields_CorrectlyIntrospects_HasCorrectNodeInterface(t *
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        nodeTestSchema,
 		RequestString: query,
 	})
@@ -385,7 +385,7 @@ func TestNodeInterfaceAndFields_CorrectlyIntrospects_HasCorrectNodeRootField(t *
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        nodeTestSchema,
 		RequestString: query,
 	})

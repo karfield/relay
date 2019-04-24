@@ -1,9 +1,9 @@
 package relay_test
 
 import (
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/testutil"
-	"github.com/graphql-go/relay"
+	"github.com/karfield/graphql"
+	"github.com/karfield/graphql/testutil"
+	"github.com/karfield/relay"
 	"reflect"
 	"testing"
 )
@@ -38,17 +38,17 @@ func init() {
 		EdgeFields: graphql.Fields{
 			"friendshipTime": &graphql.Field{
 				Type: graphql.String,
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 					return "Yesterday", nil
-				},
+				}),
 			},
 		},
 		ConnectionFields: graphql.Fields{
 			"totalCount": &graphql.Field{
 				Type: graphql.Int,
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 					return len(connectionTestAllUsers), nil
-				},
+				}),
 			},
 		},
 	})
@@ -57,11 +57,11 @@ func init() {
 	connectionTestUserType.AddFieldConfig("friends", &graphql.Field{
 		Type: connectionTestConnectionDef.ConnectionType,
 		Args: relay.ConnectionArgs,
-		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 			arg := relay.NewConnectionArguments(p.Args)
 			res := relay.ConnectionFromArray(connectionTestAllUsers, arg)
 			return res, nil
-		},
+		}),
 	})
 
 	connectionTestQueryType = graphql.NewObject(graphql.ObjectConfig{
@@ -69,9 +69,9 @@ func init() {
 		Fields: graphql.Fields{
 			"user": &graphql.Field{
 				Type: connectionTestUserType,
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 					return connectionTestAllUsers[0], nil
-				},
+				}),
 			},
 		},
 	})
@@ -124,7 +124,7 @@ func TestConnectionDefinition_IncludesConnectionAndEdgeFields(t *testing.T) {
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        connectionTestSchema,
 		RequestString: query,
 	})

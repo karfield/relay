@@ -3,9 +3,9 @@ package starwars
 import (
 	"errors"
 
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/relay"
-	"golang.org/x/net/context"
+	"context"
+	"github.com/karfield/graphql"
+	"github.com/karfield/relay"
 )
 
 /**
@@ -149,7 +149,7 @@ func init() {
 				Description: "The name of the ship.",
 			},
 		},
-		Interfaces: []*graphql.Interface{
+		Interfaces: graphql.Interfaces{
 			nodeDefinitions.NodeInterface,
 		},
 	})
@@ -197,7 +197,7 @@ func init() {
 			"ships": &graphql.Field{
 				Type: shipConnectionDefinition.ConnectionType,
 				Args: relay.ConnectionArgs,
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 					// convert args map[string]interface into ConnectionArguments
 					args := relay.NewConnectionArguments(p.Args)
 
@@ -212,10 +212,10 @@ func init() {
 					// - the list of ships for this faction
 					// - and the filter arguments (i.e. first, last, after, before)
 					return relay.ConnectionFromArray(ships, args), nil
-				},
+				}),
 			},
 		},
-		Interfaces: []*graphql.Interface{
+		Interfaces: graphql.Interfaces{
 			nodeDefinitions.NodeInterface,
 		},
 	})
@@ -236,15 +236,15 @@ func init() {
 		Fields: graphql.Fields{
 			"rebels": &graphql.Field{
 				Type: factionType,
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 					return GetRebels(), nil
-				},
+				}),
 			},
 			"empire": &graphql.Field{
 				Type: factionType,
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 					return GetEmpire(), nil
-				},
+				}),
 			},
 			"node": nodeDefinitions.NodeField,
 		},
@@ -280,21 +280,21 @@ func init() {
 		OutputFields: graphql.Fields{
 			"ship": &graphql.Field{
 				Type: shipType,
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 					if payload, ok := p.Source.(map[string]interface{}); ok {
 						return GetShip(payload["shipId"].(string)), nil
 					}
 					return nil, nil
-				},
+				}),
 			},
 			"faction": &graphql.Field{
 				Type: factionType,
-				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				Resolve: graphql.ResolveField(func(p graphql.ResolveParams) (interface{}, error) {
 					if payload, ok := p.Source.(map[string]interface{}); ok {
 						return GetFaction(payload["factionId"].(string)), nil
 					}
 					return nil, nil
-				},
+				}),
 			},
 		},
 		MutateAndGetPayload: func(inputMap map[string]interface{}, info graphql.ResolveInfo, ctx context.Context) (map[string]interface{}, error) {

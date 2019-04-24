@@ -2,11 +2,11 @@ package relay_test
 
 import (
 	"fmt"
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/gqlerrors"
-	"github.com/graphql-go/graphql/language/location"
-	"github.com/graphql-go/graphql/testutil"
-	"github.com/graphql-go/relay"
+	"github.com/karfield/graphql"
+	"github.com/karfield/graphql/gqlerrors"
+	"github.com/karfield/graphql/language/location"
+	"github.com/karfield/graphql/testutil"
+	"github.com/karfield/relay"
 	"github.com/kr/pretty"
 	"reflect"
 	"testing"
@@ -71,7 +71,7 @@ func TestPluralIdentifyingRootField_AllowsFetching(t *testing.T) {
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        pluralTestSchema,
 		RequestString: query,
 	})
@@ -150,7 +150,7 @@ func TestPluralIdentifyingRootField_CorrectlyIntrospects(t *testing.T) {
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        pluralTestSchema,
 		RequestString: query,
 	})
@@ -188,7 +188,7 @@ func TestPluralIdentifyingRootField_Configuration_ResolveSingleInputIsNil(t *tes
 			"usernames": nil,
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        pluralTestSchema,
 		RequestString: query,
 	})
@@ -222,7 +222,7 @@ func TestPluralIdentifyingRootField_Configuration_ArgNames_WrongArgNameSpecified
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:        pluralTestSchema,
 		RequestString: query,
 	})

@@ -4,8 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/graphql-go/graphql/testutil"
-	"github.com/graphql-go/relay"
+	"github.com/karfield/graphql/testutil"
+	"github.com/karfield/relay"
 )
 
 var arrayConnectionTestLetters = []interface{}{

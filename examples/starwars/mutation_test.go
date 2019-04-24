@@ -4,9 +4,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/graphql/testutil"
-	"github.com/graphql-go/relay/examples/starwars"
+	"github.com/karfield/graphql"
+	"github.com/karfield/graphql/testutil"
+	"github.com/karfield/relay/examples/starwars"
 )
 
 func TestMutation_CorrectlyMutatesTheDataSet(t *testing.T) {
@@ -45,7 +45,7 @@ func TestMutation_CorrectlyMutatesTheDataSet(t *testing.T) {
 			},
 		},
 	}
-	result := graphql.Do(graphql.Params{
+	result, _ := graphql.Do(graphql.Params{
 		Schema:         starwars.Schema,
 		RequestString:  query,
 		VariableValues: params,
